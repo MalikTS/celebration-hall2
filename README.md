@@ -119,7 +119,3 @@ celebration-hall/
 │   └── auth.go
 └── static/
 ```
-
----
-
-
