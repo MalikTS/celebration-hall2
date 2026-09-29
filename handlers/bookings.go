@@ -36,10 +36,17 @@ func CreateBooking(c *gin.Context) {
 		return
 	}
 
+
+	input.BookingDate = time.Date(input.BookingDate.UTC().Year(), input.BookingDate.UTC().Month(), input.BookingDate.UTC().Day(), 0, 0, 0, 0, time.UTC)
 	var existingBookingsCount int64
-	database.DB.Model(&models.Booking{}).
-		Where("event_id = ? AND booking_date = ?", input.EventID, input.BookingDate).
+	countResult := database.DB.Model(&models.Booking{}).
+		Where("event_id = ? AND booking_date >= ? AND booking_date < ?", input.EventID, input.BookingDate, input.BookingDate.AddDate(0, 0, 1)).
 		Count(&existingBookingsCount)
+
+	if countResult.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to check availability"})
+		return
+	}
 
 	if existingBookingsCount >= int64(event.Capacity) {
 		c.JSON(http.StatusConflict, gin.H{"error": "no available capacity for this date"})

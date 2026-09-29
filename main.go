@@ -23,6 +23,7 @@ func main() {
 
 		api.GET("/events", handlers.GetEvents)
 		api.GET("/events/:id", handlers.GetEventByID)
+		api.GET("/events/:id/availability", handlers.GetEventAvailability)
 
 		protected := api.Group("/")
 		protected.Use(middleware.AuthRequired())

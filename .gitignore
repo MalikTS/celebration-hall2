@@ -8,3 +8,9 @@ database.db
 *.out
 .DS_Store
 Thumbs.db
+
+database.db-*
+.env
+.env.*
+!.env.example
+*.log
